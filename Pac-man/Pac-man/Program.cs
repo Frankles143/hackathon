@@ -3,17 +3,21 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Threading;
 
 namespace Pac_man
 {
     class Program
     {
+        //Delcare variables - attemot to ignore they're global
+        static string[,] screenArray;
+        static int score = 0;
+        static bool gameRunning = false;
 
         static void Main(string[] args)
         {
-            int score = 0;
             //Create 2D array for the grid
-            string[,] screenArray = new string[18,36]
+            screenArray = new string[18,36]
             {
                 {"_","_","_","_","_","_","_","_","_","_","_","_","_","_","_","_","_","_","_","_","_","_","_","_","_","_","_","_","_","_","_","_","_","_","_"," "},
                 {"|"," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," ","█"," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," ","|"},
@@ -30,28 +34,125 @@ namespace Pac_man
                 {"|"," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," ","|"},
                 {"|"," ","■","■","■","■","■","■","■","■","■","■"," ","█","■","■","■"," ","■","■","■","█"," ","■","■","■","■","■","■","■","■","■","■","■"," ","|"},
                 {"|"," "," "," "," "," "," "," "," "," "," "," "," ","█"," "," "," "," "," "," "," ","█"," "," "," "," "," "," "," "," "," "," "," "," "," ","|"},
-                {"|"," "," "," "," "," "," "," "," "," "," "," "," ","█"," "," "," ","Ö"," "," "," ","█"," "," "," "," "," "," "," "," "," "," "," "," "," ","|"},
+                {"|"," "," "," "," "," "," "," "," "," "," "," "," ","█"," "," "," "," "," "," "," ","█"," "," "," "," "," "," "," "," "," "," "," "," "," ","|"},
                 {"|"," ","■","■","■","■","■","■","■","■","■","■"," "," "," ","■","■","■","■","■"," "," "," ","■","■","■","■","■","■","■","■","■","■","■"," ","|"},
                 {"¯","¯","¯","¯","¯","¯","¯","¯","¯","¯","¯","¯","¯","¯","¯","¯","¯","¯","¯","¯","¯","¯","¯","¯","¯","¯","¯","¯","¯","¯","¯","¯","¯","¯","¯","¯"},
             };
-            PacmanOut();
-            ScoreOut(ref score);
-            SetUpScreen(ref screenArray, ref score);
+
+            //Call method to call every other method
+            NewGame(ref score, ref screenArray);
+
+            //if (gameRunning == true)
+            //{
+            //    Timer t = new Timer(TimerCallback, null, 0, 1000);
+            //}
 
             Console.ReadLine();
         }
 
-        static void NewGame()
+        static void NewGame(ref int score, ref string[,] screenArray)
         {
-            //call screen setup here and reset score etc.
+            int playerX = 17, playerY = 32;
+            string keyInputString;
+
+            //Using consoleKeyInfo to find keypress
+            ConsoleKeyInfo keyInput;
+
+
+            //call screen setup here and reset score etc
+            score = 0;
+            PacmanOut();
+            Console.WriteLine("\nUse WASD or Arrow Keys keys to play, try to collect all the ¤");
+            Console.WriteLine("\nGet ready to play! Please press enter to start a new game!");
+            Console.ReadLine();
+      
+            ScoreOut();
+            SetUpScreen();
+            gameRunning = true;
+
+            //Set starting char
+            Console.SetCursorPosition(playerX, playerY);
+            Console.Write("Ö");
+
+            Console.SetCursorPosition(0, 13);
+            //If statement to check which key has been pressed
+            while (gameRunning == true)
+            {
+                keyInput = Console.ReadKey();
+                keyInputString = keyInput.Key.ToString();
+
+                if (keyInputString == "W" || keyInputString == "A" || keyInputString == "S" || keyInputString == "D" || keyInputString == "LeftArrow" || keyInputString == "RightArrow" || keyInputString == "UpArrow" || keyInputString == "DownArrow")
+                {               
+                    Console.SetCursorPosition(0, 13);
+                    MovePlayer(keyInputString, ref playerX, ref playerY);
+                }
+                else
+                {
+                    Console.Write("Please use arrow keys or WASD!                                           ");
+                    Console.SetCursorPosition(0, 13);
+                }
+            }
         }
 
-        static void ScoreOut(ref int score)
+        static void MovePlayer(string inputChar, ref int playerX, ref int playerY)
+        {
+            if (inputChar == "W" || inputChar == "UpArrow")
+            {
+                Console.SetCursorPosition(playerX, playerY);
+                Console.Write(" ");
+                playerY--;
+            }
+            if (inputChar == "S" || inputChar == "DownArrow")
+            {
+                Console.SetCursorPosition(playerX, playerY);
+                Console.Write(" ");
+                playerY++;
+            }
+            if (inputChar == "A" || inputChar == "LeftArrow")
+            {
+                Console.SetCursorPosition(playerX, playerY);
+                Console.Write(" ");
+                playerX--;
+            }
+            if (inputChar == "D" || inputChar == "RightArrow")
+            {
+                Console.SetCursorPosition(playerX, playerY);
+                Console.Write(" ");
+                playerX++;
+            }
+            Console.SetCursorPosition(playerX, playerY);
+            CheckCollision();
+            Console.SetCursorPosition(playerX, playerY);
+            Console.Write("Ö");
+            Console.SetCursorPosition(0,13);
+        }
+
+        static void CheckCollision()
+        {
+            int cleft = Console.CursorLeft;
+            int ctop = Console.CursorTop;
+            
+            
+
+            Console.SetCursorPosition(0, 13);
+            Console.Write(cleft);
+
+        }
+
+        private static void TimerCallback(Object o)
+        {
+            SetUpScreen();
+
+            // Force a garbage collection after each call
+            GC.Collect();
+        }
+
+        static void ScoreOut()
         {
             Console.WriteLine($"            Score: {score}");
         }
 
-        static void SetUpScreen(ref string[,] screenArray, ref int score)
+        static void SetUpScreen()
         {
             //double for to output both x and y
             for (int rows = 0; rows < 18; rows++)
