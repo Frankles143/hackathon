@@ -150,7 +150,7 @@ namespace Pac_man
             bool aBall = screenArray[playerYCorrect, playerX] == "¤";
             if (aWall || aBall)
             {
-                if (aBall == true && aWall == false)
+                if (aBall == true)
                 {
                     score++;
                 }
