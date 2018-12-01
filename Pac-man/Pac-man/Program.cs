@@ -19,7 +19,7 @@ namespace Pac_man
             //Create 2D array for the grid
             screenArray = new string[18,36]
             {
-                {"_","_","_","_","_","_","_","_","_","_","_","_","_","_","_","_","_","_","_","_","_","_","_","_","_","_","_","_","_","_","_","_","_","_","_"," "},
+                {"_","_","_","_","_","_","_","_","_","_","_","_","_","_","_","_","_","_","_","_","_","_","_","_","_","_","_","_","_","_","_","_","_","_","_","_"},
                 {"|"," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," ","█"," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," ","|"},
                 {"|"," ","■","■","■","■","■","■","■","■"," ","■","■","■","█","█","█","█","█","█","█","■","■","■"," "," ","■","■","■","■","■","■","■","■"," ","|"},
                 {"|"," "," "," "," "," "," "," "," "," "," "," "," "," ","█","█","█","█","█","█","█"," "," "," "," "," "," "," "," "," "," "," "," "," "," ","|"},
@@ -27,8 +27,8 @@ namespace Pac_man
                 {"|"," "," "," "," "," "," "," "," "," "," "," ","█"," ","■","■","■","■","■","■","■"," ","█"," "," "," "," "," "," "," "," "," "," "," "," ","|"},
                 {"¯","¯","¯","¯","¯","¯","¯","¯","¯","¯","|"," ","█"," "," "," "," ","█"," "," "," "," ","█"," ","|","¯","¯","¯","¯","¯","¯","¯","¯","¯","¯","¯"},
                 {"_","_","_","_","_","_","_","_","_","_","|"," ","█","■","■","■"," ","█"," ","■","■","■","█"," ","|","_","_","_","_","_","_","_","_","_","_","_"},
-                {" "," "," "," "," "," "," "," "," "," "," "," ","█"," "," "," "," "," "," "," "," "," ","█"," "," "," "," "," "," "," "," "," "," "," "," "," "},
-                {" "," "," "," "," "," "," "," "," "," "," "," "," "," ","█","■","■","-","■","■","█"," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "},
+                {"|"," "," "," "," "," "," "," "," "," "," "," ","█"," "," "," "," "," "," "," "," "," ","█"," "," "," "," "," "," "," "," "," "," "," "," ","|"},
+                {"|"," "," "," "," "," "," "," "," "," "," "," "," "," ","█","■","■","-","■","■","█"," "," "," "," "," "," "," "," "," "," "," "," "," "," ","|"},
                 {"¯","¯","¯","¯","¯","¯","¯","¯","¯","¯","|"," ","█"," ","█"," "," "," "," "," ","█"," ","█"," ","|","¯","¯","¯","¯","¯","¯","¯","¯","¯","¯","¯"},
                 {"_","_","_","_","_","_","_","_","_","_","|"," ","█"," ","█","■","■","■","■","■","█"," ","█"," ","|","_","_","_","_","_","_","_","_","_","_","_"},
                 {"|"," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," ","|"},
@@ -65,8 +65,8 @@ namespace Pac_man
             Console.WriteLine("\nUse WASD or Arrow Keys keys to play, try to collect all the ¤");
             Console.WriteLine("\nGet ready to play! Please press enter to start a new game!");
             Console.ReadLine();
-      
-            ScoreOut();
+            Console.WriteLine("");
+            //ScoreOut();
             SetUpScreen();
             gameRunning = true;
 
@@ -85,12 +85,14 @@ namespace Pac_man
                 {               
                     Console.SetCursorPosition(0, 13);
                     MovePlayer(keyInputString, ref playerX, ref playerY);
+                    ScoreOut();
                 }
                 else
                 {
                     Console.Write("Please use arrow keys or WASD!                                           ");
-                    Console.SetCursorPosition(0, 13);
+                    
                 }
+                Console.SetCursorPosition(0, 13);
             }
         }
 
@@ -101,42 +103,65 @@ namespace Pac_man
                 Console.SetCursorPosition(playerX, playerY);
                 Console.Write(" ");
                 playerY--;
+                if (CheckCollision(ref playerX, ref playerY) == false)
+                {
+                    playerY++;
+                }
             }
             if (inputChar == "S" || inputChar == "DownArrow")
             {
                 Console.SetCursorPosition(playerX, playerY);
                 Console.Write(" ");
                 playerY++;
+                if (CheckCollision(ref playerX, ref playerY) == false)
+                {
+                    playerY--;
+                }
             }
             if (inputChar == "A" || inputChar == "LeftArrow")
             {
                 Console.SetCursorPosition(playerX, playerY);
                 Console.Write(" ");
                 playerX--;
+                if (CheckCollision(ref playerX, ref playerY) == false)
+                {
+                    playerX++;
+                }
             }
             if (inputChar == "D" || inputChar == "RightArrow")
             {
                 Console.SetCursorPosition(playerX, playerY);
                 Console.Write(" ");
                 playerX++;
+                if (CheckCollision(ref playerX, ref playerY) == false)
+                {
+                    playerX--;
+                }
             }
-            Console.SetCursorPosition(playerX, playerY);
-            CheckCollision();
             Console.SetCursorPosition(playerX, playerY);
             Console.Write("Ö");
             Console.SetCursorPosition(0,13);
         }
 
-        static void CheckCollision()
+        static bool CheckCollision(ref int playerX, ref int playerY)
         {
-            int cleft = Console.CursorLeft;
-            int ctop = Console.CursorTop;
-            
-            
-
-            Console.SetCursorPosition(0, 13);
-            Console.Write(cleft);
-
+            int playerYCorrect = playerY - 17;
+            bool aWall = screenArray[playerYCorrect, playerX] == " ";
+            bool aBall = screenArray[playerYCorrect, playerX] == "¤";
+            if (aWall || aBall)
+            {
+                if (aBall == true && aWall == false)
+                {
+                    score++;
+                }
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+            //Console.WriteLine(screenArray[playerX, playerYCorrect]);
+            //Console.WriteLine($"{playerX}, {playerYCorrect}");
         }
 
         private static void TimerCallback(Object o)
@@ -159,6 +184,10 @@ namespace Pac_man
             {
                 for (int cols = 0; cols < 36; cols++)
                 {
+                    if (screenArray[rows, cols] == " ")
+                    {
+                        screenArray[rows, cols] = "¤";
+                    }
                     Console.Write(screenArray[rows,cols]);
                 }
                 Console.WriteLine();
