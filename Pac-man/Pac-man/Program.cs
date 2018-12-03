@@ -174,7 +174,7 @@ namespace Pac_man
 
         static void ScoreOut()
         {
-            Console.WriteLine($"            Score: {score}");
+            Console.WriteLine($"            Score: {score}                    ");
         }
 
         static void SetUpScreen()
