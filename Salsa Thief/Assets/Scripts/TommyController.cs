@@ -16,6 +16,11 @@ public class TommyController : MonoBehaviour
     public LayerMask whatIsGround;
     public float jumpForce = 700f;
 
+    public GameObject BulletToRight, BulletToLeft;
+    Vector4 bulletPos;
+    public float fireRate = 0.5f;
+    float nextFire = 0.0f;
+
     // Use this for initialization
     void Start()
     {
@@ -61,6 +66,11 @@ public class TommyController : MonoBehaviour
             GetComponent<Rigidbody2D>().AddForce(new Vector2(0, jumpForce));
         }
 
+        if (Input.GetButtonDown ("Fire1") && Time.time > nextFire)
+        {
+            nextFire = Time.time + fireRate;
+            Fire();
+        }
 
     }
 
@@ -71,5 +81,20 @@ public class TommyController : MonoBehaviour
         Vector3 theScale = transform.localScale;
         theScale.x *= -1;
         transform.localScale = theScale;
+    }
+
+    void Fire()
+    {
+        bulletPos = transform.position;
+        if (!facingLeft)
+        {
+            bulletPos += new Vector4(+1f, -0.43f);
+            Instantiate(BulletToRight, bulletPos, Quaternion.identity);
+        }
+        else
+        {
+            bulletPos += new Vector4(-1f, -0.43f);
+            Instantiate(BulletToLeft, bulletPos, Quaternion.identity);
+        }
     }
 }
